@@ -1,1 +1,0 @@
-asyncio.run(send_message('你好'))
