@@ -1,13 +1,13 @@
-from tools.stocks import get_stock_data
+from works.legu import legu_main
 from tools.echobot import robot_send_message
 from tools.llm_api import local_openai
 
 if __name__ == '__main__':
-    response = local_openai(
-        prompt="你好,你喜欢我吗",
-        system_prompt="你是一个中文助理",
-        model_name='qwen',
-        stream=False
-    )
-    print(response)
-    
+    # response = local_openai(
+    #     prompt="请问2024年10月13号这天，互联网对于股市的看法是悲观还是乐观？",
+    #     system_prompt="你是一个金融专家",
+    #     model_name='glm',
+    #     stream=False
+    # )
+    # robot_send_message(response)
+    legu_main()

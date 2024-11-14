@@ -3,7 +3,7 @@ from telegram import Bot
 from tools.setting import ModelConfig
 from tools.standard_log import log_to_file
 
-
+#  消息收发机器人
 @log_to_file
 async def send_message(text):
     config = ModelConfig()
