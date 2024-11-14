@@ -9,5 +9,6 @@ if __name__ == '__main__':
     #     model_name='glm',
     #     stream=False
     # )
+    # print(type(response))
     # robot_send_message(response)
     legu_main()

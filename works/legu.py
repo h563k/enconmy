@@ -8,6 +8,8 @@ import pandas as pd
 from selenium.webdriver.common.by import By
 from tools.spider_net import env_init
 from tools.echobot import robot_send_message
+from tools.standard_log import log_to_file
+
 
 def get_token():
     # 获取今天的日期
@@ -60,10 +62,10 @@ def baffe_index_process(years, all_baffe_index):
     baffe_index_75 = data['baffe_index'][-365*years:].quantile(0.75)
     return baffe_index_25, baffe_index_50, baffe_index_75
 
-
+@log_to_file
 def legu_main():
     # 获取巴菲特指数, 并判断目前高估还是低估
-    driver, options = env_init()
+    driver, _ = env_init(True)
     url = "https://legulegu.com/stockdata/marketcap-gdp?utm_source=wechat_session&utm_medium=social&utm_oi=676400100432154624"
     driver.get(url)
     time.sleep(5)
@@ -75,13 +77,14 @@ def legu_main():
         5, all_baffe_index)
     baffe_index_125, baffe_index_150, baffe_index_175 = baffe_index_process(
         1, all_baffe_index)
-    message = f"""
-    今日巴菲特指数:                 {buffet_index:.2%}
-    最近1年巴菲特指数上四分位:      {baffe_index_175:.2%}
-    最近1年巴菲特指数均值:          {baffe_index_150:.2%}
-    最近1年巴菲特指数下四分位:      {baffe_index_125:.2%}
-    最近5年巴菲特指数上四分位:      {baffe_index_575:.2%}
-    最近5年巴菲特指数均值:          {baffe_index_550:.2%}
-    最近5年巴菲特指数下四分位:      {baffe_index_525:.2%}"""
-    robot_send_message(message)
     driver.quit()
+    message = f"""
+今日巴菲特指数:                            {buffet_index:.2%}
+最近1年巴菲特指数上四分位:      {baffe_index_175:.2%}
+最近1年巴菲特指数均值:              {baffe_index_150:.2%}
+最近1年巴菲特指数下四分位:      {baffe_index_125:.2%}
+最近5年巴菲特指数上四分位:      {baffe_index_575:.2%}
+最近5年巴菲特指数均值:              {baffe_index_550:.2%}
+最近5年巴菲特指数下四分位:      {baffe_index_525:.2%}"""
+    robot_send_message(message)
+    return message
