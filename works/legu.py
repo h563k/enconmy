@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from tools.spider_net import env_init
 from tools.echobot import robot_send_message
 from tools.standard_log import log_to_file
-
+import akshare as ak
 
 def get_token():
     # 获取今天的日期
@@ -41,22 +41,24 @@ def get_all_baffe_index(cookies):
         return data
     else:
         print("今天是周六,开始采集")
-        token = get_token()
-        url = f"https://legulegu.com/api/stockdata/marketcap-gdp/get-marketcap-gdp?token={token}"
-        payload = {}
-        headers = {
-            'cookie': f"LAAA={cookies[0]['value']}; JSESSIONID={cookies[1]['value']}"
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        data = response.json()
-        with open("./data/baffe_index/baffe_index.json", "w") as f:
-            json.dump(data, f, ensure_ascii=False)
+        data = ak.stock_buffett_index_lg()
+        # token = get_token()
+        # url = f"https://legulegu.com/api/stockdata/marketcap-gdp/get-marketcap-gdp?token={token}"
+        # print(url)
+        # payload = {}
+        # headers = {     
+        #     'cookie': f"LAAA={cookies[0]['value']}; JSESSIONID={cookies[1]['value']}"
+        # }
+        # response = requests.request("GET", url, headers=headers, data=payload)
+        # data = response.json()
+        # with open("./data/baffe_index/baffe_index.json", "w") as f:
+        #     json.dump(data, f, ensure_ascii=False)
         return data
 
 
-def baffe_index_process(years, all_baffe_index):
-    data = pd.DataFrame(all_baffe_index['data'])
-    data['baffe_index'] = data['marketCap']/data['gdp']
+def baffe_index_process(years, data):
+    # data = pd.DataFrame(all_baffe_index['data'])
+    data['baffe_index'] = data['总市值']/data['GDP']
     baffe_index_25 = data['baffe_index'][-365*years:].quantile(0.25)
     baffe_index_50 = data['baffe_index'][-365*years:].quantile(0.5)
     baffe_index_75 = data['baffe_index'][-365*years:].quantile(0.75)
@@ -65,7 +67,7 @@ def baffe_index_process(years, all_baffe_index):
 @log_to_file
 def legu_main():
     # 获取巴菲特指数, 并判断目前高估还是低估
-    driver, _ = env_init(True)
+    driver, _ = env_init()
     url = "https://legulegu.com/stockdata/marketcap-gdp?utm_source=wechat_session&utm_medium=social&utm_oi=676400100432154624"
     driver.get(url)
     time.sleep(5)

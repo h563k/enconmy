@@ -1,3 +1,4 @@
+from works.citicsinfo import citicsinfo_main
 from works.legu import legu_main
 from tools.echobot import robot_send_message
 from tools.llm_api import local_openai

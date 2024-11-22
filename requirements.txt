@@ -1,0 +1,12 @@
+akshare
+futu-api
+openai
+pandas
+pyyaml
+python-telegram-bot
+requests
+selenium
+vnpy
+vnpy_ctp
+vnpy_ctastrategy
+vnpy_ctabacktester
