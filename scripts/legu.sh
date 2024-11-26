@@ -13,6 +13,7 @@ cd "$PROJECT_DIR" || { echo "无法进入目录 $PROJECT_DIR"; exit 1; }
 # 激活虚拟环境
 source /root/miniconda3/etc/profile.d/conda.sh
 # 激活环境
+conda init
 conda activate vnpy
 
 # 运行Python脚本中的主函数
