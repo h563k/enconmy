@@ -11,6 +11,7 @@ from tools.echobot import robot_send_message
 from tools.standard_log import log_to_file
 import akshare as ak
 
+
 def get_token():
     # 获取今天的日期
     today = datetime.date.today()
@@ -32,30 +33,6 @@ def get_today_baffe_index(driver):
     return element.text
 
 
-def get_all_baffe_index(cookies):
-    today = datetime.datetime.today()
-    if today.weekday() != 5:  # 5代表周六
-        print("今天不是周六,读取历史数据")
-        with open("./data/baffe_index/baffe_index.json", "r") as f:
-            data = json.load(f)
-        return data
-    else:
-        print("今天是周六,开始采集")
-        data = ak.stock_buffett_index_lg()
-        # token = get_token()
-        # url = f"https://legulegu.com/api/stockdata/marketcap-gdp/get-marketcap-gdp?token={token}"
-        # print(url)
-        # payload = {}
-        # headers = {     
-        #     'cookie': f"LAAA={cookies[0]['value']}; JSESSIONID={cookies[1]['value']}"
-        # }
-        # response = requests.request("GET", url, headers=headers, data=payload)
-        # data = response.json()
-        # with open("./data/baffe_index/baffe_index.json", "w") as f:
-        #     json.dump(data, f, ensure_ascii=False)
-        return data
-
-
 def baffe_index_process(years, data):
     # data = pd.DataFrame(all_baffe_index['data'])
     data['baffe_index'] = data['总市值']/data['GDP']
@@ -63,6 +40,7 @@ def baffe_index_process(years, data):
     baffe_index_50 = data['baffe_index'][-365*years:].quantile(0.5)
     baffe_index_75 = data['baffe_index'][-365*years:].quantile(0.75)
     return baffe_index_25, baffe_index_50, baffe_index_75
+
 
 @log_to_file
 def legu_main():
@@ -72,7 +50,7 @@ def legu_main():
     driver.get(url)
     time.sleep(5)
     cookies = driver.get_cookies()
-    today_buffet_index = get_today_baffe_index(driver)
+    today_buffet_index = ak.stock_buffett_index_lg()
     buffet_index = float(re.findall('\d+.\d+', today_buffet_index)[0])/100
     all_baffe_index = get_all_baffe_index(cookies)
     baffe_index_525, baffe_index_550, baffe_index_575 = baffe_index_process(
