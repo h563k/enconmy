@@ -12,21 +12,6 @@ from tools.standard_log import log_to_file
 import akshare as ak
 
 
-def get_token():
-    # 获取今天的日期
-    today = datetime.date.today()
-    # 将日期转换为字符串
-    today_str = str(today)
-    # 将字符串编码为字节串
-    today_bytes = today_str.encode('utf-8')
-    # 创建MD5哈希对象
-    m = hashlib.md5()
-    # 更新哈希对象
-    m.update(today_bytes)
-    # 获取十六进制表示的哈希值
-    return m.hexdigest()
-
-
 def get_today_baffe_index(driver):
     xpath = "/html/body/div[1]/div[1]/div/div[2]/div[1]/div[3]/div[2]/div[2]/div/div[2]/span"
     element = driver.find_element(by=By.XPATH, value=xpath)
@@ -52,7 +37,7 @@ def legu_main():
     cookies = driver.get_cookies()
     today_buffet_index = ak.stock_buffett_index_lg()
     buffet_index = float(re.findall('\d+.\d+', today_buffet_index)[0])/100
-    all_baffe_index = get_all_baffe_index(cookies)
+    all_baffe_index = ak.stock_buffett_index_lg()
     baffe_index_525, baffe_index_550, baffe_index_575 = baffe_index_process(
         5, all_baffe_index)
     baffe_index_125, baffe_index_150, baffe_index_175 = baffe_index_process(
