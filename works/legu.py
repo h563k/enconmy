@@ -1,21 +1,6 @@
-import re
-import time
-import json
-import requests
-import datetime
-import hashlib
-import pandas as pd
-from selenium.webdriver.common.by import By
-from tools.spider_net import env_init
 from tools.echobot import robot_send_message
 from tools.standard_log import log_to_file
 import akshare as ak
-
-
-def get_today_baffe_index(driver):
-    xpath = "/html/body/div[1]/div[1]/div/div[2]/div[1]/div[3]/div[2]/div[2]/div/div[2]/span"
-    element = driver.find_element(by=By.XPATH, value=xpath)
-    return element.text
 
 
 def baffe_index_process(years, data):
@@ -30,19 +15,13 @@ def baffe_index_process(years, data):
 @log_to_file
 def legu_main():
     # 获取巴菲特指数, 并判断目前高估还是低估
-    driver, _ = env_init()
-    url = "https://legulegu.com/stockdata/marketcap-gdp?utm_source=wechat_session&utm_medium=social&utm_oi=676400100432154624"
-    driver.get(url)
-    time.sleep(5)
-    cookies = driver.get_cookies()
-    today_buffet_index = ak.stock_buffett_index_lg()
-    buffet_index = float(re.findall('\d+.\d+', today_buffet_index)[0])/100
     all_baffe_index = ak.stock_buffett_index_lg()
+    all_baffe_index.to_csv('./data/stock_buffett_index.csv')
+    buffet_index = all_baffe_index.iloc[-1,2]/all_baffe_index.iloc[-1,3]
     baffe_index_525, baffe_index_550, baffe_index_575 = baffe_index_process(
         5, all_baffe_index)
     baffe_index_125, baffe_index_150, baffe_index_175 = baffe_index_process(
         1, all_baffe_index)
-    driver.quit()
     message = f"""
 今日巴菲特指数:                            {buffet_index:.2%}
 最近1年巴菲特指数上四分位:      {baffe_index_175:.2%}

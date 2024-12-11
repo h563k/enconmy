@@ -9,7 +9,6 @@ MAIN_FUNCTION="legu_main"
 
 # 进入项目目录
 cd "$PROJECT_DIR" || { echo "无法进入目录 $PROJECT_DIR"; exit 1; }
-
 # 激活虚拟环境
 source /root/miniconda3/etc/profile.d/conda.sh
 # 激活环境
